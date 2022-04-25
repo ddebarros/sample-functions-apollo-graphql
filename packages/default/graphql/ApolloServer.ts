@@ -2,12 +2,12 @@ import { ApolloServerBase, GraphQLOptions, isHttpQueryError, runHttpQuery } from
 import type { LandingPage } from 'apollo-server-plugin-base';
 import { Headers } from 'apollo-server-env';
 
-function sanitizeHeaders(headers: { [key: string]: any } = {}) {
+function sanitizeHeaders(headers: Record<string, any>) {
   return Object.entries(headers)
   .reduce((acc, [key, value]) => {
     acc[key.toLowerCase()] = value;
     return acc;
-  }, {} as { [key: string]: any })
+  }, {} as Record<string, any>)
 }
 
 export interface CreateHandlerOptions {
@@ -21,10 +21,10 @@ export interface CreateHandlerOptions {
 }
 
 export interface MainArgs {
-  __ow_headers?: { [k: string]: any }
+  __ow_headers?: Record<string, any>
   __ow_path?: string
   __ow_method?: string
-  __ow_body?: string | object | Record<string, any>
+  __ow_body?: string | Record<string, any>
   __ow_query?: string
   [key: string]: any
 }
@@ -61,7 +61,7 @@ export class ApolloServer extends ApolloServerBase<{ args: MainArgs }> {
           requestHeaders['access-control-request-headers'] &&
           !responseHeaders['access-control-allow-headers']
         ) {
-          responseHeaders['access-control-Allow-headers'] = requestHeaders['access-control-request-headers'];
+          responseHeaders['access-control-allow-headers'] = requestHeaders['access-control-request-headers'];
           responseHeaders['vary'] = 'access-control-Request-headers';
         }
 
@@ -145,7 +145,9 @@ export class ApolloServer extends ApolloServerBase<{ args: MainArgs }> {
         }
       } else {
         return {
-          body: error,
+          body: {
+            error
+          },
           statusCode: 400
         }
       }

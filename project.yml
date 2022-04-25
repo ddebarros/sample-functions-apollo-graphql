@@ -1,0 +1,5 @@
+packages:
+  - name: default
+    actions:
+    - name: graphql
+      runtime: nodejs:default

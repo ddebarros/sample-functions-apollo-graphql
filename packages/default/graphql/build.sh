@@ -1,6 +1,6 @@
 #!/bin/bash
 
-yarn
+yarn install
 yarn build
 
 rm -rf node_modules
